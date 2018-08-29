@@ -8,7 +8,7 @@ user authentication service with sample users and a user web portal to
 demonstrate the user experience when controlling their lights with your action.
 
 An example of a Smart Home IoT cloud engine is stored in
-`smart-home-provider`. This consists of both the main
+`smart-home-provider/cloud`. This consists of both the main
 `smart-home-provider-cloud.js` main web service, as well as the web portal used
 to interact with virtual devices in `frontend/`. `smart-home-provider-cloud.js`
 is the entry point to the Node.js Express app that runs the IoT cloud service,
@@ -19,13 +19,13 @@ The primary AoG intent handlers are stored in
 `smart-home-provider/smart-home-app.js`. Here, you can find listeners for POST
 requests similar to the one your app will receive from the Google Assistant
 when SYNCing, QUERYing, or EXECuting smart home device control with your cloud.
-The path for requests to this app is '/smarthome'.
+The path for requests to this app is '/ha'.
 
 This sample also includes a mock-assistant-platform module that you can use to
 locally test your Smart Home app with mocked requests for the SYNC, QUERY, and
 EXEC intents that you will receive from the Google Assistant. See below for
 instructions on how to use. It is hard coded to use the account under username
-'rick' given in `smart-home-provider/datastore.js`. However you swap the
+'rick' given in `smart-home-provider/cloud/datastore.js`. However you swap the
 appropriate Bearer token in the makeReq method of the mock-assistant-platform.
 
 ## Setup Instructions
@@ -34,49 +34,17 @@ See the developer guide and release notes at [https://developers.google.com/acti
 
 ### Steps for testing with Google Assistant
 
-#### Create and setup project in Actions Console
-
-1. Open the [Actions Console](http://console.actions.google.com) and create a new project. Click 'Smart home actions'.
-1. Click Okay.
-1. Click ADD under App information.
-1. Give your App some information like an invocation name, some description, and
- some policy and contact info.
-1. Click Save.
-
-#### Add Request Sync
-The Request Sync feature allows a cloud integration to send a request to the Home Graph
-to send a new SYNC request.
-
+1. Navigate to the [Actions Console](https://console.actions.google.com) and
+click Add/Import Project.
+1. Create a new project or import an existing Google Cloud project.
 1. Navigate to the
 [Google Cloud Console API Manager](https://console.developers.google.com/apis)
-for your project id.
-1. Enable the [HomeGraph API](https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview). This will be used to request a new sync and to report the state back to the HomeGraph.
+for your project.
 1. Click Credentials
 1. Click 'Create credentials'
 1. Click 'API key'
 1. Copy the API key shown and insert it in
 `smart-home-provider/cloud/config-provider.js`
-   Enable Request-Sync API using [these
-   instructions](https://developers.google.com/actions/smarthome/create-app#request-sync).
-
-To use it, add a new device while the sample is active.
-
-#### Add Report State
-The Report State feature allows a cloud integration to proactively provide the
-current state of devices to the Home Graph without a `QUERY` request. This is
-done securely through [JWT (JSON web tokens)](https://jwt.io/).
-
-1. Navigate to the [Google Cloud Console API & Services page](https://console.cloud.google.com/apis/credentials)
-1. Select **Create Credentials** and create a **Service account key**
-1. Create the account and download a JSON file.
-   Save this as `smart-home-provider/cloud/jwt-key.json`.
-
-The sample already includes support for report state. To use it, create a device
-in the web frontend. Then click on the arrow icon in the top-right corner. It will
-start reporting state when the state changes locally.
-
-#### Setup sample service
-
 1. Set up the web portal
 
         cd smart-home-provider/frontend
@@ -84,19 +52,20 @@ start reporting state when the state changes locally.
         bower install
         cd ..
 
-1. Run smart-home-provider-cloud.js, either locally or hosted
+1. Run cloud/smart-home-provider-cloud.js, either locally or hosted
     * If running locally
 
+          cd cloud/
           npm install
-          npm start
+          node smart-home-provider-cloud.js isLocal
 
     * If running in a hosted env,
 
-          node cloud/smart-home-provider-cloud.js smart-home="https://your_domain.com"
+          node smart-home-provider-cloud.js smart-home-pub="https://your_domain.com"
 
 1. In the resulting output, note the config data. In particular the client ID and client Secret.
 1. In a browser, open the ngrok URL shown.
-1. Log in with one of the sample user accounts, for instance:
+1. Log in with one of the sample user accounts, for instance
 
        user: rick
        password: oldman
@@ -104,11 +73,15 @@ start reporting state when the state changes locally.
 1. This is a web portal to your Smart Home devices. Configure the smart lights
 shown as you please. Click the cloud icon shown above at least one of them to
 enable it for cloud control.
-
-#### Start testing
-
-1. Back in the Actions Console, select your smart home action and enter
-   the URL for fulfillment, e.g. https://xyz123.ngrok.io/smarthome
+1. Return to the Actions Console project. Click 'Use Actions SDK'.
+1. Update the Action Package (action.json) with the URL where your project is hosted (don't forget to include /ha).
+1. Use the [gActions CLI](https://developers.google.com/actions/tools/gactions-cli)
+to run the command given with the 'action.json' file as your Action Package.
+1. Click Okay.
+1. Click ADD under App information.
+1. Give your App some information like an invocation name, some description, and
+ some policy and contact info.
+1. Click Save.
 1. Click Add under Account Linking.
 1. Select 'Authorization Code' for Grant Type.
 1. Under Client Information, enter the client ID and secret from earlier.
@@ -118,19 +91,15 @@ path, e.g. https://xyz123.ngrok.io/oauth
 e.g. https://xyz123.ngrok.io/token
 1. Enter any remaining necessary information you might need for
 authentication your app. Then Save.
-1. Press the **TEST DRAFT** button to begin testing this app.
-
-#### Setup Account linking
-
 1. On a device with the Google Assistant logged into the same account used
 to create the project in the Actions Console, enter your Assistant settings.
 1. Click Home Control.
 1. Click the '+' sign to add a device.
 1. Find your app in the list of providers.
 1. Log in to your service.
-1. Start using the Google Assistant in the Actions Console to control your devices. Try saying 'turn my lights on'.
+1. Start using the Google Assistant or Simulator in the Actions Console to control your devices. Try saying 'turn my lights on'.
 
-:information_source: Assistant will only provide you control over items that are registered, so if you visit your front end https://xyz123.ngrok.io and click the add icon to create a device your server will receive a new SYNC command.
+:information_source: Assistant will only provide you control over items that are registered, so if you visit your front end https://xyz123.ngrok.io and click the cloud icon to enable a device you will need to unlink and then re-link your account to see the new or removed devices.
 
 
 ### Steps for testing with mock-assistant-platform
@@ -142,17 +111,18 @@ to create the project in the Actions Console, enter your Assistant settings.
        bower install
        cd ..
 
-1. Run smart-home-provider-cloud.js, either locally or hosted
+1. Run cloud/smart-home-provider-cloud.js, either locally or hosted
 
-       npm install
+	  cd cloud/
+	  npm install
 
     * If running locally:
 
-          npm start
+          node smart-home-provider-cloud.js isLocal
 
     * If running in a hosted environment
 
-          node cloud/smart-home-provider-cloud.js smart-home="https://your_domain.com"
+          node smart-home-provider-cloud.js smart-home="https://your_domain.com"
 
 1. In the resulting output, note the config data. In particular the client ID and client Secret.
 1. In a browser, open the ngrok URL shown.
@@ -168,9 +138,11 @@ enable it for cloud control.
 
        cd mock-assistant-platform
        node platform help
-       node platform url="https://<NGROK_DOMAIN>.ngrok.io/smarthome" sync
-       node platform url="https://<NGROK_DOMAIN>.ngrok.io/smarthome" query
-       node platform url="https://<NGROK_DOMAIN>.ngrok.io/smarthome" ex
+       node platform url="https://<NGROK_DOMAIN>.ngrok.io/ha" sync
+       node platform url="https://<NGROK_DOMAIN>.ngrok.io/ha" query
+       node platform url="https://<NGROK_DOMAIN>.ngrok.io/ha" ex
+
+For more detailed information on deployment, see the [documentation](https://developers.google.com/actions/samples/).
 
 ### Examples of SYNC, QUERY, and EXEC requests
 
@@ -178,7 +150,7 @@ Your app will need to handle these 3 basic requests from the Google Assistant.
 
 #### Sync
 
-    POST /smarthome HTTP/1.1
+    POST /ha HTTP/1.1
     Host: <something>.ngrok.io
     Accept: application/json
     Content-Type: application/json
@@ -195,7 +167,7 @@ Your app will need to handle these 3 basic requests from the Google Assistant.
 
 #### Query
 
-    POST /smarthome HTTP/1.1
+    POST /ha HTTP/1.1
     Host: <something>.ngrok.io
     Accept: application/json
     Content-Type: application/json
@@ -226,7 +198,7 @@ Your app will need to handle these 3 basic requests from the Google Assistant.
 
 #### Execute
 
-    POST /smarthome HTTP/1.1
+    POST /ha HTTP/1.1
     Host: <something>.ngrok.io
     Accept: application/json
     Content-Type: application/json
@@ -257,8 +229,8 @@ Your app will need to handle these 3 basic requests from the Google Assistant.
                         "command": "action.devices.commands.ChangeColor",
                         "params": {
                             "color": {
-                                "name": "red",
-                                "spectrumRGB": 65280
+                                "name": "cerulian",
+                                "spectrumRGB": 523435
                             }
                         }
                     },{
@@ -288,4 +260,5 @@ Your use of this sample is subject to, and by using or downloading the sample fi
 
 ## Google+
 Actions on Google Developers Community on Google+ [https://g.co/actionsdev](https://g.co/actionsdev).
+
 
