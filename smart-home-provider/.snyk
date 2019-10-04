@@ -15,3 +15,8 @@ patch:
         patched: '2019-08-30T20:55:23.346Z'
     - googleapis > google-auth-library > gcp-metadata > extend:
         patched: '2019-08-30T20:55:23.346Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-04T04:00:30.107Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-04T04:00:30.107Z'
