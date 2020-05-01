@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.13.5
+version: v1.14.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -15,3 +15,30 @@ patch:
         patched: '2019-08-30T20:55:23.346Z'
     - googleapis > google-auth-library > gcp-metadata > extend:
         patched: '2019-08-30T20:55:23.346Z'
+  SNYK-JS-LODASH-567746:
+    - ngrok > async > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > @snyk/dep-graph > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > @snyk/dep-graph > graphlib > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-nodejs-lockfile-parser > graphlib > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > inquirer > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-config > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-mvn-plugin > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-nodejs-lockfile-parser > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-nuget-plugin > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-nuget-plugin > dotnet-deps-parser > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
+    - snyk > snyk-php-plugin > @snyk/composer-lockfile-parser > lodash:
+        patched: '2020-05-01T04:02:18.502Z'
