@@ -23,7 +23,7 @@
     "googleapis": "^27.0.0",
     "morgan": "^1.9.1",
     "ngrok": "^2.3.0",
-    "node-fetch": "^1.6.3",
+    "node-fetch": "^2.6.1",
     "snyk": "^1.222.1"
   },
   "devDependencies": {
