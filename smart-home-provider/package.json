@@ -22,9 +22,9 @@
     "express-session": "^1.15.6",
     "googleapis": "^27.0.0",
     "morgan": "^1.9.1",
-    "ngrok": "^2.3.0",
+    "ngrok": "^4.0.0",
     "node-fetch": "^1.6.3",
-    "snyk": "^1.222.1"
+    "snyk": "^1.996.0"
   },
   "devDependencies": {
     "eslint": "^5.1.0",
